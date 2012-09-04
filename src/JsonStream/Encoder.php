@@ -148,23 +148,23 @@ class Encoder
 	/**
 	 * Encodes an object or associative array.
 	 *
-	 * @param mixed $list
+	 * @param array|object $object
 	 */
-	private function _encodeObject($list)
+	private function _encodeObject($object)
 	{
 		$this->_writeValue('{');
 
-		$x = 1;
-		foreach ($list as $key => $value) {
+		$firstIteration = true;
+
+		foreach ($object as $key => $value) {
+			if (!$firstIteration) {
+				$this->_writeValue(',');
+			}
+			$firstIteration = false;
+
 			$this->_encodeScalar((string)$key);
 			$this->_writeValue(':');
 			$this->encode($value);
-
-			if ($x < count($list)) {
-				$this->_writeValue(',');
-			}
-
-			$x++;
 		}
 
 		$this->_writeValue('}');
