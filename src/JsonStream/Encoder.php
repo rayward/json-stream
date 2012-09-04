@@ -108,11 +108,20 @@ class Encoder
 	 */
 	private function _isList($value)
 	{
-		for($i = 0, reset($value); $i < count($value); $i++, next($value)) {
-			if(key($value) !== $i) {
+		// objects that are not explicitly traversable could never have integer keys, therefore they are not a list
+		if (is_object($value) && !($value instanceof \Traversable)) {
+			return false;
+		}
+
+		// check if the array/object has only integer keys.
+		$i = 0;
+		foreach ($value as $key => $element) {
+			if ($key !== $i) {
 				return false;
 			}
+			$i++;
 		}
+
 		return true;
 	}
 
