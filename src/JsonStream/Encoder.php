@@ -5,18 +5,21 @@ namespace JsonStream;
 class Encoder
 {
 	private $_stream;
+	private $_echo;
 
 	/**
 	 * @param resource $stream A stream resource.
 	 * @throws \InvalidArgumentException If $stream is not a stream resource.
 	 */
-	public function __construct($stream)
+	public function __construct($stream,$echo=false)
 	{
-		if (!is_resource($stream) || get_resource_type($stream) != 'stream') {
+		$this->_echo=$echo;
+		if (!$this->_echo && (!is_resource($stream) || get_resource_type($stream) != 'stream')) {
 			throw new \InvalidArgumentException("Resource is not a stream");
 		}
 
-		$this->_stream = $stream;
+		if(!$this->_echo)
+			$this->_stream = $stream;
 	}
 
 	/**
@@ -63,7 +66,11 @@ class Encoder
 	 */
 	private function _writeValue($value)
 	{
-		fwrite($this->_stream, $value);
+		if(!$this->_echo){
+			fwrite($this->_stream, $value);
+		} else {
+			echo $value;
+		}
 	}
 
 	/**
