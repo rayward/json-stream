@@ -133,13 +133,16 @@ class Encoder
 	private function _encodeList($list)
 	{
 		$this->_writeValue('[');
-
+		
+		$firstIteration = true;
+		
 		foreach ($list as $x => $value) {
-			$this->encode($value);
-
-			if ($x < count($list) - 1) {
+			if (!$firstIteration) {
 				$this->_writeValue(',');
 			}
+			$firstIteration = false;
+			
+			$this->encode($value);
 		}
 
 		$this->_writeValue(']');
